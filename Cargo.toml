@@ -2,7 +2,7 @@
 name = "acs37800"
 version = "0.1.0"
 description = "Driver for ACS37800 energy metering IC"
-keywords = ["acs37800", "embedded", "i2c", "spi", "driver", "energy", "power"]
+keywords = ["acs37800", "i2c", "spi", "driver", "power"]
 categories = []
 edition = "2024"
 rust-version = "1.91.1"
