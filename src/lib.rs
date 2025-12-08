@@ -12,6 +12,7 @@ use embedded_hal::i2c::I2c;
 pub mod defaults;
 
 mod eeprom;
+pub use eeprom::*;
 
 #[derive(Builder)]
 pub struct Acs37800<I2C: I2c> {
