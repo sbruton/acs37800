@@ -4,11 +4,9 @@ version = "0.1.0"
 description = "Driver for ACS37800 energy metering IC"
 keywords = ["acs37800", "embedded", "i2c", "spi", "driver", "energy", "power"]
 categories = []
-publish = false
 edition = "2024"
 rust-version = "1.91.1"
-homepage = "https://seanbruton.dev/acs37800/"
-repository = "https://github.com/sbruton/acs37800-rs"
+repository = "https://github.com/sbruton/acs37800"
 license = "MIT OR Apache-2.0"
 
 [[example]]
