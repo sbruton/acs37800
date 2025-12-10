@@ -1,8 +1,5 @@
 #![cfg_attr(all(not(test), not(feature = "std")), no_std)]
 
-#[cfg(all(not(test), not(feature = "i2c"), not(feature = "spi")))]
-compile_error!("At least one interface feature must be enabled: `i2c` or `spi`");
-
 use thiserror::Error;
 
 #[cfg(feature = "i2c")]
