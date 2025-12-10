@@ -63,19 +63,3 @@ Acs37800Eeprom {
 ```
 
 Additional examples, including async usage, can be found in the [`examples`](./examples) folder
-
-## Minimum Supported Rust Version
-
-This crate requires **Rust 1.85** or newer. That is the first compiler release with full support for the 2024 edition used by this project. The CI workflow derives its compiler list directly from `Cargo.toml` and runs the checks/tests daily on **every** Rust release from the MSRV up through the latest stable toolchain so regressions are surfaced quickly.
-
-You can mirror that coverage locally with the `just` helpers:
-
-```shell
-just install-supported-toolchains  # install every rustc from the MSRV through stable
-just test-all-toolchains           # run unit tests on each supported toolchain
-just check-all-toolchains          # run the cross-target checks on each toolchain
-```
-
-## Contributing
-
-Contributions are welcome! Please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) for details on the required toolchain, `just` commands, and pull-request expectations.
