@@ -1,11 +1,14 @@
 # Rust Drivers for the ACS37800 Energy Metering IC
 
+[![CI](https://github.com/sbruton/acs37800/actions/workflows/ci.yml/badge.svg)](https://github.com/sbruton/acs37800/actions/workflows/ci.yml)
+[![Crates.io](https://img.shields.io/crates/v/acs37800.svg)](https://crates.io/crates/acs37800)
+[![Docs](https://docs.rs/acs37800/badge.svg)](https://docs.rs/acs37800)
+[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#minimum-supported-rust-version)
+
 > [!IMPORTANT]
 > This driver is a work in progress. Only the I²C variants of the IC are currently supported. Reading the EEPROM registers is the only currently supported operation.
 
 ## Example
-
-The following is an example of using the driver. Async support for embedded-hal is provided when the `async` feature is enabled.
 
 ```rust
 // Instantiate the I2C bus device
@@ -58,3 +61,21 @@ Acs37800Eeprom {
     bypass_n_en: false,
 }
 ```
+
+Additional examples, including async usage, can be found in the [`examples`](./examples) folder
+
+## Minimum Supported Rust Version
+
+This crate requires **Rust 1.85** or newer. That is the first compiler release with full support for the 2024 edition used by this project. The CI workflow derives its compiler list directly from `Cargo.toml` and runs the checks/tests daily on **every** Rust release from the MSRV up through the latest stable toolchain so regressions are surfaced quickly.
+
+You can mirror that coverage locally with the `just` helpers:
+
+```shell
+just install-supported-toolchains  # install every rustc from the MSRV through stable
+just test-all-toolchains           # run unit tests on each supported toolchain
+just check-all-toolchains          # run the cross-target checks on each toolchain
+```
+
+## Contributing
+
+Contributions are welcome! Please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) for details on the required toolchain, `just` commands, and pull-request expectations.

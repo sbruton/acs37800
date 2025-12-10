@@ -1,49 +1,45 @@
 #![cfg_attr(all(not(test), not(feature = "std")), no_std)]
 
-use bon::Builder;
+#[cfg(all(not(test), not(feature = "i2c"), not(feature = "spi")))]
+compile_error!("At least one interface feature must be enabled: `i2c` or `spi`");
+
 use thiserror::Error;
 
-#[cfg(feature = "async")]
-use embedded_hal_async::i2c::I2c;
+#[cfg(feature = "i2c")]
+#[cfg_attr(docsrs, doc(cfg(feature = "i2c")))]
+pub mod i2c;
 
-#[cfg(not(feature = "async"))]
-use embedded_hal::i2c::I2c;
-
-pub mod defaults;
+#[cfg(feature = "spi")]
+#[cfg_attr(docsrs, doc(cfg(feature = "spi")))]
+pub mod spi;
 
 mod eeprom;
 pub use eeprom::*;
 
-#[derive(Builder)]
-pub struct Acs37800<I2C: I2c> {
-    i2c: I2C,
-    #[builder(default = 0x60)]
-    address: u8,
-}
-
-impl<I2C: I2c> Acs37800<I2C> {
+pub trait Acs37800 {
     #[cfg(feature = "async")]
-    pub async fn read_reg32(&mut self, reg: u8) -> Result<u32, Acs37800ReadError<I2C>> {
-        let mut buf = [0u8; 4];
-        self.i2c
-            .write_read(self.address, &[reg], &mut buf)
-            .await
-            .map_err(Acs37800ReadError::I2c)?;
-        Ok(u32::from_le_bytes(buf))
-    }
+    fn read_reg32(
+        &mut self,
+        reg: Acs37800EepromRegister,
+    ) -> impl Future<Output = Result<u32, Acs37800ReadError>>;
 
     #[cfg(not(feature = "async"))]
-    pub fn read_reg32(&mut self, reg: u8) -> Result<u32, Acs37800ReadError<I2C>> {
-        let mut buf = [0u8; 4];
-        self.i2c
-            .write_read(self.address, &[reg], &mut buf)
-            .map_err(Acs37800ReadError::I2c)?;
-        Ok(u32::from_le_bytes(buf))
-    }
+    fn read_reg32(&mut self, reg: Acs37800EepromRegister) -> Result<u32, Acs37800ReadError>;
 }
 
 #[derive(Debug, Error)]
-pub enum Acs37800ReadError<I2C: I2c> {
-    #[error("I2C communication error: {0}")]
-    I2c(#[source] I2C::Error),
+pub enum Acs37800ReadError {
+    #[cfg(feature = "std")]
+    #[error("Bus communication error: {0}")]
+    Io(String),
+    #[cfg(not(feature = "std"))]
+    #[error("Bus communication error")]
+    Io,
+}
+
+pub mod prelude {
+    pub use crate::Acs37800EepromExt as _;
+
+    #[cfg(feature = "i2c")]
+    pub use crate::i2c::Acs37800I2c;
 }

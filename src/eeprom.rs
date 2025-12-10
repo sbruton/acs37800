@@ -1,12 +1,6 @@
 use bitfield_struct::bitfield;
 use bon::Builder;
 
-#[cfg(feature = "async")]
-use embedded_hal_async::i2c::I2c;
-
-#[cfg(not(feature = "async"))]
-use embedded_hal::i2c::I2c;
-
 use crate::{Acs37800, Acs37800ReadError};
 
 /// EEPROM register 0x0B (ACS37800_REGISTER_0B_t)
@@ -197,90 +191,114 @@ pub struct Acs37800EepromRaw {
     pub r0f: Eeprom0fRaw,
 }
 
-impl<I2C: I2c> Acs37800<I2C> {
+pub trait Acs37800EepromExt: Acs37800 {
     #[cfg(feature = "async")]
-    pub async fn read_eeprom_0b(&mut self) -> Result<Eeprom0bRaw, Acs37800ReadError<I2C>> {
-        let r0b = Eeprom0bRaw(self.read_reg32(0x0B).await?);
+    fn read_eeprom_0b_raw(
+        &mut self,
+    ) -> impl Future<Output = Result<Eeprom0bRaw, Acs37800ReadError>> + '_ {
+        async {
+            let r0b = Eeprom0bRaw(self.read_reg32(Acs37800EepromRegister::R0B).await?);
+            Ok(r0b)
+        }
+    }
+
+    #[cfg(not(feature = "async"))]
+    fn read_eeprom_0b_raw(&mut self) -> Result<Eeprom0bRaw, Acs37800ReadError> {
+        let r0b = Eeprom0bRaw(self.read_reg32(Acs37800EepromRegister::R0B)?);
         Ok(r0b)
     }
 
-    #[cfg(not(feature = "async"))]
-    pub fn read_eeprom_0b(&mut self) -> Result<Eeprom0bRaw, Acs37800ReadError<I2C>> {
-        let r0b = Eeprom0bRaw(self.read_reg32(0x0B)?);
-        Ok(r0b)
+    #[cfg(feature = "async")]
+    fn read_eeprom_0c_raw(
+        &mut self,
+    ) -> impl Future<Output = Result<Eeprom0cRaw, Acs37800ReadError>> + '_ {
+        async {
+            let r0c = Eeprom0cRaw(self.read_reg32(Acs37800EepromRegister::R0C).await?);
+            Ok(r0c)
+        }
     }
 
-    #[cfg(feature = "async")]
-    pub async fn read_eeprom_0c(&mut self) -> Result<Eeprom0cRaw, Acs37800ReadError<I2C>> {
-        let r0c = Eeprom0cRaw(self.read_reg32(0x0C).await?);
+    #[cfg(not(feature = "async"))]
+    fn read_eeprom_0c_raw(&mut self) -> Result<Eeprom0cRaw, Acs37800ReadError> {
+        let r0c = Eeprom0cRaw(self.read_reg32(Acs37800EepromRegister::R0C)?);
         Ok(r0c)
     }
 
-    #[cfg(not(feature = "async"))]
-    pub fn read_eeprom_0c(&mut self) -> Result<Eeprom0cRaw, Acs37800ReadError<I2C>> {
-        let r0c = Eeprom0cRaw(self.read_reg32(0x0C)?);
-        Ok(r0c)
+    #[cfg(feature = "async")]
+    fn read_eeprom_0d_raw(
+        &mut self,
+    ) -> impl Future<Output = Result<Eeprom0dRaw, Acs37800ReadError>> + '_ {
+        async {
+            let r0d = Eeprom0dRaw(self.read_reg32(Acs37800EepromRegister::R0D).await?);
+            Ok(r0d)
+        }
     }
 
-    #[cfg(feature = "async")]
-    pub async fn read_eeprom_0d(&mut self) -> Result<Eeprom0dRaw, Acs37800ReadError<I2C>> {
-        let r0d = Eeprom0dRaw(self.read_reg32(0x0D).await?);
+    #[cfg(not(feature = "async"))]
+    fn read_eeprom_0d_raw(&mut self) -> Result<Eeprom0dRaw, Acs37800ReadError> {
+        let r0d = Eeprom0dRaw(self.read_reg32(Acs37800EepromRegister::R0D)?);
         Ok(r0d)
     }
 
-    #[cfg(not(feature = "async"))]
-    pub fn read_eeprom_0d(&mut self) -> Result<Eeprom0dRaw, Acs37800ReadError<I2C>> {
-        let r0d = Eeprom0dRaw(self.read_reg32(0x0D)?);
-        Ok(r0d)
+    #[cfg(feature = "async")]
+    fn read_eeprom_0e_raw(
+        &mut self,
+    ) -> impl Future<Output = Result<Eeprom0eRaw, Acs37800ReadError>> + '_ {
+        async {
+            let r0e = Eeprom0eRaw(self.read_reg32(Acs37800EepromRegister::R0E).await?);
+            Ok(r0e)
+        }
     }
 
-    #[cfg(feature = "async")]
-    pub async fn read_eeprom_0e(&mut self) -> Result<Eeprom0eRaw, Acs37800ReadError<I2C>> {
-        let r0e = Eeprom0eRaw(self.read_reg32(0x0E).await?);
+    #[cfg(not(feature = "async"))]
+    fn read_eeprom_0e_raw(&mut self) -> Result<Eeprom0eRaw, Acs37800ReadError> {
+        let r0e = Eeprom0eRaw(self.read_reg32(Acs37800EepromRegister::R0E)?);
         Ok(r0e)
     }
 
-    #[cfg(not(feature = "async"))]
-    pub fn read_eeprom_0e(&mut self) -> Result<Eeprom0eRaw, Acs37800ReadError<I2C>> {
-        let r0e = Eeprom0eRaw(self.read_reg32(0x0E)?);
-        Ok(r0e)
-    }
-
     #[cfg(feature = "async")]
-    pub async fn read_eeprom_0f(&mut self) -> Result<Eeprom0fRaw, Acs37800ReadError<I2C>> {
-        let r0f = Eeprom0fRaw(self.read_reg32(0x0F).await?);
-        Ok(r0f)
+    fn read_eeprom_0f_raw(
+        &mut self,
+    ) -> impl Future<Output = Result<Eeprom0fRaw, Acs37800ReadError>> + '_ {
+        async {
+            let r0f = Eeprom0fRaw(self.read_reg32(Acs37800EepromRegister::R0F).await?);
+            Ok(r0f)
+        }
     }
 
     #[cfg(not(feature = "async"))]
-    pub fn read_eeprom_0f(&mut self) -> Result<Eeprom0fRaw, Acs37800ReadError<I2C>> {
-        let r0f = Eeprom0fRaw(self.read_reg32(0x0F)?);
+    fn read_eeprom_0f_raw(&mut self) -> Result<Eeprom0fRaw, Acs37800ReadError> {
+        let r0f = Eeprom0fRaw(self.read_reg32(Acs37800EepromRegister::R0F)?);
         Ok(r0f)
     }
 
     #[cfg(feature = "async")]
-    pub async fn read_eeprom_raw(&mut self) -> Result<Acs37800EepromRaw, Acs37800ReadError<I2C>> {
-        let r0b = self.read_eeprom_0b().await?;
-        let r0c = self.read_eeprom_0c().await?;
-        let r0d = self.read_eeprom_0d().await?;
-        let r0e = self.read_eeprom_0e().await?;
-        let r0f = self.read_eeprom_0f().await?;
-        Ok(Acs37800EepromRaw::builder()
-            .r0b(r0b)
-            .r0c(r0c)
-            .r0d(r0d)
-            .r0e(r0e)
-            .r0f(r0f)
-            .build())
+    fn read_eeprom_raw(
+        &mut self,
+    ) -> impl Future<Output = Result<Acs37800EepromRaw, Acs37800ReadError>> + '_ {
+        async {
+            let r0b = self.read_eeprom_0b_raw().await?;
+            let r0c = self.read_eeprom_0c_raw().await?;
+            let r0d = self.read_eeprom_0d_raw().await?;
+            let r0e = self.read_eeprom_0e_raw().await?;
+            let r0f = self.read_eeprom_0f_raw().await?;
+            Ok(Acs37800EepromRaw::builder()
+                .r0b(r0b)
+                .r0c(r0c)
+                .r0d(r0d)
+                .r0e(r0e)
+                .r0f(r0f)
+                .build())
+        }
     }
 
     #[cfg(not(feature = "async"))]
-    pub fn read_eeprom_raw(&mut self) -> Result<Acs37800EepromRaw, Acs37800ReadError<I2C>> {
-        let r0b = self.read_eeprom_0b()?;
-        let r0c = self.read_eeprom_0c()?;
-        let r0d = self.read_eeprom_0d()?;
-        let r0e = self.read_eeprom_0e()?;
-        let r0f = self.read_eeprom_0f()?;
+    fn read_eeprom_raw(&mut self) -> Result<Acs37800EepromRaw, Acs37800ReadError> {
+        let r0b = self.read_eeprom_0b_raw()?;
+        let r0c = self.read_eeprom_0c_raw()?;
+        let r0d = self.read_eeprom_0d_raw()?;
+        let r0e = self.read_eeprom_0e_raw()?;
+        let r0f = self.read_eeprom_0f_raw()?;
         Ok(Acs37800EepromRaw::builder()
             .r0b(r0b)
             .r0c(r0c)
@@ -292,15 +310,19 @@ impl<I2C: I2c> Acs37800<I2C> {
 
     /// Convenience: read and interpret EEPROM in one go.
     #[cfg(feature = "async")]
-    pub async fn read_eeprom(&mut self) -> Result<Acs37800Eeprom, Acs37800ReadError<I2C>> {
-        Ok(self.read_eeprom_raw().await?.into())
+    fn read_eeprom(
+        &mut self,
+    ) -> impl Future<Output = Result<Acs37800Eeprom, Acs37800ReadError>> + '_ {
+        async { Ok(self.read_eeprom_raw().await?.into()) }
     }
 
     #[cfg(not(feature = "async"))]
-    pub fn read_eeprom(&mut self) -> Result<Acs37800Eeprom, Acs37800ReadError<I2C>> {
+    fn read_eeprom(&mut self) -> Result<Acs37800Eeprom, Acs37800ReadError> {
         Ok(self.read_eeprom_raw()?.into())
     }
 }
+
+impl<T: Acs37800 + ?Sized> Acs37800EepromExt for T {}
 
 /// Higher-level interpreted view of the EEPROM content.
 ///
@@ -433,5 +455,373 @@ fn sign_extend(val: u16, bits: u8) -> i16 {
         (v as i16) | !((mask) as i16)
     } else {
         v as i16
+    }
+}
+
+#[repr(u8)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+pub enum Acs37800EepromRegister {
+    R0B = 0x0b,
+    R0C = 0x0c,
+    R0D = 0x0d,
+    R0E = 0x0e,
+    R0F = 0x0f,
+}
+
+#[cfg(test)]
+mod test_support {
+    use super::*;
+    use std::collections::HashMap;
+
+    #[derive(Default)]
+    pub(super) struct MockDevice {
+        regs: HashMap<Acs37800EepromRegister, u32>,
+        fail_on: Option<Acs37800EepromRegister>,
+    }
+
+    impl MockDevice {
+        pub(super) fn set_reg(&mut self, reg: Acs37800EepromRegister, value: u32) {
+            self.regs.insert(reg, value);
+        }
+
+        pub(super) fn with_failure(reg: Acs37800EepromRegister) -> Self {
+            Self {
+                regs: HashMap::new(),
+                fail_on: Some(reg),
+            }
+        }
+
+        fn read_word(&mut self, reg: Acs37800EepromRegister) -> Result<u32, Acs37800ReadError> {
+            if self.fail_on == Some(reg) {
+                return Err(bus_error());
+            }
+            self.regs.get(&reg).copied().ok_or_else(bus_error)
+        }
+    }
+
+    #[cfg(not(feature = "async"))]
+    impl Acs37800 for MockDevice {
+        fn read_reg32(&mut self, reg: Acs37800EepromRegister) -> Result<u32, Acs37800ReadError> {
+            self.read_word(reg)
+        }
+    }
+
+    #[cfg(feature = "async")]
+    impl Acs37800 for MockDevice {
+        fn read_reg32(
+            &mut self,
+            reg: Acs37800EepromRegister,
+        ) -> impl Future<Output = Result<u32, Acs37800ReadError>> {
+            let result = self.read_word(reg);
+            async move { result }
+        }
+    }
+
+    pub(super) fn pack_r0b(
+        qvo_fine: u16,
+        sns_fine: u16,
+        crs_sns: u8,
+        iavg: bool,
+        pavg: bool,
+    ) -> u32 {
+        let mut value = 0u32;
+        value |= (qvo_fine as u32) & 0x1ff;
+        value |= ((sns_fine as u32) & 0x3ff) << 9;
+        value |= ((crs_sns as u32) & 0x7) << 19;
+        value |= bit(iavg) << 22;
+        value |= bit(pavg) << 23;
+        value
+    }
+
+    pub(super) fn pack_r0c(rms_avg_1: u8, rms_avg_2: u16, vchan_offset: u8) -> u32 {
+        let mut value = 0u32;
+        value |= (rms_avg_1 as u32) & 0x7f;
+        value |= ((rms_avg_2 as u32) & 0x3ff) << 7;
+        value |= ((vchan_offset as u32) & 0xff) << 17;
+        value
+    }
+
+    pub(super) fn pack_r0d(ichan_en: bool, chan_sel: u8, fault: u8, fltdly: u8) -> u32 {
+        let mut value = 0u32;
+        value |= bit(ichan_en) << 7;
+        value |= ((chan_sel as u32) & 0x7) << 9;
+        value |= ((fault as u32) & 0xff) << 13;
+        value |= ((fltdly as u32) & 0x7) << 21;
+        value
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn pack_r0e(
+        vevent: u8,
+        overv: u8,
+        underv: u8,
+        delaycnt_sel: bool,
+        halfcycle: bool,
+        squarewave: bool,
+        zerocross_channel: bool,
+        zerocross_edge: bool,
+    ) -> u32 {
+        let mut value = 0u32;
+        value |= (vevent as u32) & 0x3f;
+        value |= ((overv as u32) & 0x3f) << 8;
+        value |= ((underv as u32) & 0x3f) << 14;
+        value |= bit(delaycnt_sel) << 20;
+        value |= bit(halfcycle) << 21;
+        value |= bit(squarewave) << 22;
+        value |= bit(zerocross_channel) << 23;
+        value |= bit(zerocross_edge) << 24;
+        value
+    }
+
+    pub(super) fn pack_r0f(
+        i2c_addr: u8,
+        disable_addr: bool,
+        dio0: u8,
+        dio1: u8,
+        n_cycles: u16,
+        bypass: bool,
+    ) -> u32 {
+        let mut value = 0u32;
+        value |= ((i2c_addr as u32) & 0x7f) << 2;
+        value |= bit(disable_addr) << 9;
+        value |= ((dio0 as u32) & 0x3) << 10;
+        value |= ((dio1 as u32) & 0x3) << 12;
+        value |= ((n_cycles as u32) & 0x3ff) << 14;
+        value |= bit(bypass) << 24;
+        value
+    }
+
+    pub(super) fn bus_error() -> Acs37800ReadError {
+        #[cfg(feature = "std")]
+        {
+            Acs37800ReadError::Io("mock".into())
+        }
+        #[cfg(not(feature = "std"))]
+        {
+            Acs37800ReadError::Io
+        }
+    }
+
+    pub(super) fn assert_is_bus_error(err: &Acs37800ReadError) {
+        #[cfg(feature = "std")]
+        assert!(
+            matches!(err, Acs37800ReadError::Io(_)),
+            "unexpected error: {err:?}"
+        );
+
+        #[cfg(not(feature = "std"))]
+        assert!(
+            matches!(err, Acs37800ReadError::Io),
+            "unexpected error: {err:?}"
+        );
+    }
+
+    fn bit(flag: bool) -> u32 {
+        if flag { 1 } else { 0 }
+    }
+}
+
+#[cfg(all(test, not(feature = "async")))]
+mod tests {
+    use super::{Acs37800EepromRegister, test_support::*};
+    use crate::Acs37800EepromExt;
+
+    #[test]
+    fn read_eeprom_raw_gathers_all_registers() {
+        let mut mock = MockDevice::default();
+        mock.set_reg(
+            Acs37800EepromRegister::R0B,
+            pack_r0b(0x101, 0x155, 0b011, true, false),
+        );
+        mock.set_reg(Acs37800EepromRegister::R0C, pack_r0c(0x45, 0x155, 0x3A));
+        mock.set_reg(
+            Acs37800EepromRegister::R0D,
+            pack_r0d(true, 0b010, 0x5A, 0b111),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0E,
+            pack_r0e(0x12, 0x21, 0x11, false, true, false, true, false),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0F,
+            pack_r0f(0x63, false, 0b01, 0b10, 0x12C, true),
+        );
+
+        let raw = mock.read_eeprom_raw().expect("raw eeprom");
+        assert_eq!(raw.r0b.qvo_fine(), 0x101);
+        assert_eq!(raw.r0b.sns_fine(), 0x155);
+        assert_eq!(raw.r0c.rms_avg_1(), 0x45);
+        assert_eq!(raw.r0d.fault(), 0x5A);
+        assert_eq!(raw.r0e.vevent_cycs(), 0x12);
+        assert_eq!(raw.r0f.n(), 0x12C);
+    }
+
+    #[test]
+    fn read_eeprom_interprets_signed_and_flags() {
+        let mut mock = MockDevice::default();
+        mock.set_reg(
+            Acs37800EepromRegister::R0B,
+            pack_r0b(0x1A5, 0x2D3, 0b010, true, true),
+        );
+        mock.set_reg(Acs37800EepromRegister::R0C, pack_r0c(0x40, 0x155, 0xF6));
+        mock.set_reg(
+            Acs37800EepromRegister::R0D,
+            pack_r0d(true, 0b101, 0xAA, 0b110),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0E,
+            pack_r0e(0x17, 0x2A, 0x18, true, true, false, true, false),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0F,
+            pack_r0f(0x52, true, 0b10, 0b01, 0x1F3, true),
+        );
+
+        let eeprom = mock.read_eeprom().expect("parsed eeprom");
+        assert_eq!(eeprom.qvo_fine_codes, -91);
+        assert_eq!(eeprom.qvo_fine_icodes_offset, -5824);
+        assert_eq!(eeprom.sns_fine_codes, -301);
+        assert_eq!(eeprom.vchan_offset_codes, -10);
+        assert_eq!(eeprom.crs_sns, 0b010);
+        assert!(eeprom.iavgsel_enabled);
+        assert!(eeprom.pavgsel_enabled);
+        assert_eq!(eeprom.rms_avg_1, 0x40);
+        assert_eq!(eeprom.rms_avg_2, 0x155);
+        assert!(eeprom.ichan_delay_enabled);
+        assert_eq!(eeprom.chan_delay_sel, 0b101);
+        assert_eq!(eeprom.fault_threshold_codes, 0xAA);
+        assert_eq!(eeprom.fault_delay_setting, 0b110);
+        assert_eq!(eeprom.vevent_cycles, 0x17);
+        assert_eq!(eeprom.overvoltage_threshold_codes, 0x2A);
+        assert_eq!(eeprom.undervoltage_threshold_codes, 0x18);
+        assert_eq!(eeprom.zerocross_pulse_width_us, 256);
+        assert!(eeprom.halfcycle_en);
+        assert!(!eeprom.squarewave_en);
+        assert!(eeprom.zerocross_current_channel);
+        assert!(!eeprom.zerocross_rising_edge);
+        assert_eq!(eeprom.i2c_address_7bit, 0x52);
+        assert!(eeprom.i2c_address_disabled);
+        assert_eq!(eeprom.dio0_sel_raw, 0b10);
+        assert_eq!(eeprom.dio1_sel_raw, 0b01);
+        assert_eq!(eeprom.n_cycles, 0x1F3);
+        assert!(eeprom.bypass_n_en);
+    }
+
+    #[test]
+    fn read_eeprom_propagates_errors() {
+        let mut mock = MockDevice::with_failure(Acs37800EepromRegister::R0C);
+        mock.set_reg(Acs37800EepromRegister::R0B, pack_r0b(0, 0, 0, false, false));
+        let err = mock.read_eeprom_raw().unwrap_err();
+        assert_is_bus_error(&err);
+    }
+}
+
+#[cfg(all(test, feature = "async"))]
+mod async_tests {
+    use super::{Acs37800EepromRegister, test_support::*};
+    use crate::Acs37800EepromExt;
+
+    #[tokio::test]
+    async fn read_eeprom_raw_gathers_all_registers_async() {
+        let mut mock = MockDevice::default();
+        mock.set_reg(
+            Acs37800EepromRegister::R0B,
+            pack_r0b(0x101, 0x155, 0b011, true, false),
+        );
+        mock.set_reg(Acs37800EepromRegister::R0C, pack_r0c(0x45, 0x155, 0x3A));
+        mock.set_reg(
+            Acs37800EepromRegister::R0D,
+            pack_r0d(true, 0b010, 0x5A, 0b111),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0E,
+            pack_r0e(0x12, 0x21, 0x11, false, true, false, true, false),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0F,
+            pack_r0f(0x63, false, 0b01, 0b10, 0x12C, true),
+        );
+
+        let raw = mock.read_eeprom_raw().await.expect("raw eeprom");
+        assert_eq!(raw.r0b.qvo_fine(), 0x101);
+        assert_eq!(raw.r0b.sns_fine(), 0x155);
+        assert_eq!(raw.r0c.rms_avg_1(), 0x45);
+        assert_eq!(raw.r0d.fault(), 0x5A);
+        assert_eq!(raw.r0e.vevent_cycs(), 0x12);
+        assert_eq!(raw.r0f.n(), 0x12C);
+    }
+
+    #[tokio::test]
+    async fn read_eeprom_interprets_signed_and_flags_async() {
+        let mut mock = MockDevice::default();
+        mock.set_reg(
+            Acs37800EepromRegister::R0B,
+            pack_r0b(0x1A5, 0x2D3, 0b010, true, true),
+        );
+        mock.set_reg(Acs37800EepromRegister::R0C, pack_r0c(0x40, 0x155, 0xF6));
+        mock.set_reg(
+            Acs37800EepromRegister::R0D,
+            pack_r0d(true, 0b101, 0xAA, 0b110),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0E,
+            pack_r0e(0x17, 0x2A, 0x18, true, true, false, true, false),
+        );
+        mock.set_reg(
+            Acs37800EepromRegister::R0F,
+            pack_r0f(0x52, true, 0b10, 0b01, 0x1F3, true),
+        );
+
+        let eeprom = mock.read_eeprom().await.expect("parsed eeprom");
+        assert_eq!(eeprom.qvo_fine_codes, -91);
+        assert_eq!(eeprom.qvo_fine_icodes_offset, -5824);
+        assert_eq!(eeprom.sns_fine_codes, -301);
+        assert_eq!(eeprom.vchan_offset_codes, -10);
+        assert_eq!(eeprom.crs_sns, 0b010);
+        assert!(eeprom.iavgsel_enabled);
+        assert!(eeprom.pavgsel_enabled);
+        assert_eq!(eeprom.rms_avg_1, 0x40);
+        assert_eq!(eeprom.rms_avg_2, 0x155);
+        assert!(eeprom.ichan_delay_enabled);
+        assert_eq!(eeprom.chan_delay_sel, 0b101);
+        assert_eq!(eeprom.fault_threshold_codes, 0xAA);
+        assert_eq!(eeprom.fault_delay_setting, 0b110);
+        assert_eq!(eeprom.vevent_cycles, 0x17);
+        assert_eq!(eeprom.overvoltage_threshold_codes, 0x2A);
+        assert_eq!(eeprom.undervoltage_threshold_codes, 0x18);
+        assert_eq!(eeprom.zerocross_pulse_width_us, 256);
+        assert!(eeprom.halfcycle_en);
+        assert!(!eeprom.squarewave_en);
+        assert!(eeprom.zerocross_current_channel);
+        assert!(!eeprom.zerocross_rising_edge);
+        assert_eq!(eeprom.i2c_address_7bit, 0x52);
+        assert!(eeprom.i2c_address_disabled);
+        assert_eq!(eeprom.dio0_sel_raw, 0b10);
+        assert_eq!(eeprom.dio1_sel_raw, 0b01);
+        assert_eq!(eeprom.n_cycles, 0x1F3);
+        assert!(eeprom.bypass_n_en);
+    }
+
+    #[tokio::test]
+    async fn read_eeprom_propagates_errors_async() {
+        let mut mock = MockDevice::with_failure(Acs37800EepromRegister::R0C);
+        mock.set_reg(Acs37800EepromRegister::R0B, pack_r0b(0, 0, 0, false, false));
+        let err = mock.read_eeprom_raw().await.unwrap_err();
+        assert_is_bus_error(&err);
+    }
+}
+
+#[cfg(test)]
+mod sign_extend_tests {
+    use super::sign_extend;
+
+    #[test]
+    fn sign_extend_handles_positive_values() {
+        assert_eq!(sign_extend(0b0011, 4), 3);
+    }
+
+    #[test]
+    fn sign_extend_handles_negative_values() {
+        assert_eq!(sign_extend(0b1110, 4), -2);
     }
 }
