@@ -8,6 +8,15 @@
 > [!IMPORTANT]
 > This driver is a work in progress. Only the I²C variants of the IC are currently supported. Reading the EEPROM registers is the only currently supported operation.
 
+## Crate Features
+
+In most every case you will need to enable at least one feature depending on the variant of the ACS37800 you are targeting.
+
+| Feature | Description        |
+| ------- | ------------------ |
+| `i2c`   | Enables I²C driver |
+| `spi`   | Enables SPI driver |
+
 ## Example
 
 ```rust
