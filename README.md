@@ -1,18 +1,21 @@
 # Rust Drivers for the ACS37800 Energy Metering IC
 
+[![CI](https://github.com/sbruton/acs37800/actions/workflows/ci.yml/badge.svg)](https://github.com/sbruton/acs37800/actions/workflows/ci.yml)
+[![Crates.io](https://img.shields.io/crates/v/acs37800.svg)](https://crates.io/crates/acs37800)
+[![Docs](https://docs.rs/acs37800/badge.svg)](https://docs.rs/acs37800)
+[![MSRV](https://img.shields.io/badge/rustc-1.85%2B-blue.svg)](#minimum-supported-rust-version)
+
 > [!IMPORTANT]
 > This driver is a work in progress. Only the I²C variants of the IC are currently supported. Reading the EEPROM registers is the only currently supported operation.
 
 ## Example
 
-The following is an example of using the driver. Async support for embedded-hal is provided when the `async` feature is enabled.
-
 ```rust
-// Instantiate the I2C bus device
+// Instantiate the I²C bus device
 let i2c = I2cdev::new("/dev/i2c-1").unwrap();
 
-// Instantiate the ACS37800 driver
-let mut acs37800 = Acs37800::builder().i2c(i2c).build();
+// Instantiate the ACS37800 I²C driver
+let mut acs37800 = Acs37800I2c::builder().i2c(i2c).build();
 
 // Read the EEPROM data
 match acs37800.read_eeprom() {
@@ -58,3 +61,5 @@ Acs37800Eeprom {
     bypass_n_en: false,
 }
 ```
+
+Additional examples, including async usage, can be found in the [`examples`](./examples) folder
