@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-12-10
+
+### Fixed
+
+- Enabled `i2c` feature for docs.rs
+
 ## [0.2.0] - 2025-12-09
 
 ### Added
@@ -47,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Read and basic interpretation of EEPROM values from I2C variants.
 
-[unreleased]: https://github.com/sbruton/acs37800/compare/0.2.0...HEAD
+[unreleased]: https://github.com/sbruton/acs37800/compare/0.2.1...HEAD
+[0.2.1]: https://github.com/sbruton/acs37800/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/sbruton/acs37800/compare/0.1.1...0.2.0
 [0.1.1]: https://github.com/sbruton/acs37800/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/sbruton/acs37800/releases/tag/0.1.0
