@@ -1,6 +1,6 @@
 [package]
 name = "acs37800"
-version = "0.2.1"
+version = "0.2.2"
 description = "Driver for ACS37800 energy metering IC"
 keywords = ["acs37800", "i2c", "spi", "driver", "power"]
 categories = ["embedded", "hardware-support", "no-std"]
