@@ -144,9 +144,10 @@ impl<I2C: I2c> Acs37800 for Acs37800I2c<I2C> {
 
 #[cfg(all(test, not(feature = "async")))]
 mod tests {
-    use super::assert_is_bus_error;
     use embedded_hal::i2c::ErrorKind;
     use embedded_hal_mock::eh1::i2c::{Mock as I2cMock, Transaction as I2cTransaction};
+
+    use crate::test::assert_is_bus_error;
 
     use super::*;
 
@@ -199,6 +200,8 @@ mod async_tests {
     use embedded_hal::i2c::ErrorKind;
     use embedded_hal_mock::eh1::i2c::{Mock as I2cMock, Transaction as I2cTransaction};
 
+    use crate::test::assert_is_bus_error;
+
     use super::*;
 
     fn new_driver(expectations: &[I2cTransaction]) -> Acs37800I2c<I2cMock> {
@@ -245,19 +248,4 @@ mod async_tests {
 
         driver.i2c.done();
     }
-}
-
-#[cfg(test)]
-fn assert_is_bus_error(err: &Acs37800ReadError) {
-    #[cfg(feature = "std")]
-    assert!(
-        matches!(err, Acs37800ReadError::Io(_)),
-        "unexpected error: {err:?}"
-    );
-
-    #[cfg(not(feature = "std"))]
-    assert!(
-        matches!(err, Acs37800ReadError::Io),
-        "unexpected error: {err:?}"
-    );
 }

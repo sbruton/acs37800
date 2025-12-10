@@ -470,8 +470,9 @@ pub enum Acs37800EepromRegister {
 
 #[cfg(test)]
 mod test_support {
-    use super::*;
     use std::collections::HashMap;
+
+    use super::*;
 
     #[derive(Default)]
     pub(super) struct MockDevice {
@@ -602,20 +603,6 @@ mod test_support {
         }
     }
 
-    pub(super) fn assert_is_bus_error(err: &Acs37800ReadError) {
-        #[cfg(feature = "std")]
-        assert!(
-            matches!(err, Acs37800ReadError::Io(_)),
-            "unexpected error: {err:?}"
-        );
-
-        #[cfg(not(feature = "std"))]
-        assert!(
-            matches!(err, Acs37800ReadError::Io),
-            "unexpected error: {err:?}"
-        );
-    }
-
     fn bit(flag: bool) -> u32 {
         if flag { 1 } else { 0 }
     }
@@ -623,8 +610,10 @@ mod test_support {
 
 #[cfg(all(test, not(feature = "async")))]
 mod tests {
-    use super::{Acs37800EepromRegister, test_support::*};
-    use crate::Acs37800EepromExt;
+    use crate::{Acs37800EepromExt, test::assert_is_bus_error};
+
+    use super::test_support::*;
+    use super::*;
 
     #[test]
     fn read_eeprom_raw_gathers_all_registers() {
@@ -718,8 +707,10 @@ mod tests {
 
 #[cfg(all(test, feature = "async"))]
 mod async_tests {
-    use super::{Acs37800EepromRegister, test_support::*};
-    use crate::Acs37800EepromExt;
+    use crate::{Acs37800EepromExt, test::assert_is_bus_error};
+
+    use super::test_support::*;
+    use super::*;
 
     #[tokio::test]
     async fn read_eeprom_raw_gathers_all_registers_async() {

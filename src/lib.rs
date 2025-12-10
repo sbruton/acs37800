@@ -13,6 +13,9 @@ pub mod i2c;
 #[cfg_attr(docsrs, doc(cfg(feature = "spi")))]
 pub mod spi;
 
+#[cfg(test)]
+pub(crate) mod test;
+
 mod eeprom;
 pub use eeprom::*;
 
