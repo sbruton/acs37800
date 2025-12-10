@@ -11,11 +11,11 @@
 ## Example
 
 ```rust
-// Instantiate the I2C bus device
+// Instantiate the I²C bus device
 let i2c = I2cdev::new("/dev/i2c-1").unwrap();
 
-// Instantiate the ACS37800 driver
-let mut acs37800 = Acs37800::builder().i2c(i2c).build();
+// Instantiate the ACS37800 I²C driver
+let mut acs37800 = Acs37800I2c::builder().i2c(i2c).build();
 
 // Read the EEPROM data
 match acs37800.read_eeprom() {
